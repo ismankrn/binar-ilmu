@@ -1179,26 +1179,38 @@ def wali_rekap():
             # return str(len(komentar_siswa_sel))
             if pd.isna(komentar_siswa_sel):
                 komentar_siswa_sel = ""
-            nilai_sel = []
-            nama_mapel = []
-            # nilai_siswa_sel.to_excel("outs.xlsx")
-            # return str((nilai_siswa_sel.shape))
-            for i in range(nilai_siswa_sel.shape[1]):
-                if i > 2 and i < nilai_siswa_sel.shape[1]-6 and i%3==0 :
-                    nama_mapel.append(form_nilai.columns[i].replace("_Keterampilan",""))
-            for i in range(nilai_siswa_sel.shape[1]):
-                if i > 1 and i < nilai_siswa_sel.shape[1]-1 :
-                    if pd.isna(nilai_siswa_sel.iloc[0,i]):
-                        nilai_sel.append("-")
-                    else:
-                        try:
-                            nilai_sel.append("{0:.2f}".format(nilai_siswa_sel.iloc[0,i]))
-                        except:
-                            nilai_sel.append("{}".format(nilai_siswa_sel.iloc[0,i]))
-                else:
-                    nilai_sel.append(nilai_siswa_sel.iloc[0,i])
+            # nilai_sel = []
+            # nama_mapel = []
+            # # nilai_siswa_sel.to_excel("outs.xlsx")
+            # # list mapel
+            # # return str((nilai_siswa_sel.shape))
+            # for i in range(nilai_siswa_sel.shape[1]):
+            #     if i > 2 and i < nilai_siswa_sel.shape[1]-6 and i%3==0 :
+            #         nama_mapel.append(form_nilai.columns[i].replace("_Keterampilan",""))
+            # for i in range(nilai_siswa_sel.shape[1]):
+            #     if i > 1 and i < nilai_siswa_sel.shape[1]-1 :
+            #         if pd.isna(nilai_siswa_sel.iloc[0,i]):
+            #             nilai_sel.append("-")
+            #         else:
+            #             try:
+            #                 nilai_sel.append("{0:.2f}".format(nilai_siswa_sel.iloc[0,i]))
+            #             except:
+            #                 nilai_sel.append("{}".format(nilai_siswa_sel.iloc[0,i]))
+            #     else:
+            #         nilai_sel.append(nilai_siswa_sel.iloc[0,i])
+            file_stream=stream_dropbox_file("/guru_mapel.xlsx")
+            guru_mapel = pd.read_excel(file_stream)
+            nama_mapel = guru_mapel["Mata Pelajaran"].values.tolist()
             # return str(nama_mapel)
             jlh_mapel = int((len(nama_mapel)))
+            # print(nilai_sel)
+            nilai_siswa_sel.fillna("-", inplace=True)
+            nilai_sel = nilai_siswa_sel.values.tolist()[0]
+            nilai_sel.insert(0,0)
+            # print(tmp2)
+            # tmp1.append(nilai_siswa_sel.values.tolist())
+            # print(tmp)
+            print(nama_mapel)
             html= render_template("nilai_wali.html",nilai_sel=nilai_sel, tahun_ajaran=tahun_ajaran, cetak="0",lihat=lihat, nisn_siswa=nisn_siswa,
                                         pelajaran=pelajaran, kelas=kelas, semester=semester, nama_mapel=nama_mapel, komentar_siswa_sel=komentar_siswa_sel,char_count=char_count,
                                         eval_type=eval_type, nama_guru=session['nama_user'],jlh_mapel=jlh_mapel,jlh_nilai_sel=len(nilai_sel))
