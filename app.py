@@ -178,7 +178,7 @@ def data_siswa():
                 # kelas = "VII" #Input
                 # load data siswa
                 file_stream=stream_dropbox_file("/data_siswa.xlsx")
-                data_siswa = pd.read_excel(file_stream, converters={'NISN': str})
+                data_siswa = pd.read_excel(file_stream)
                 data_kelas = data_siswa[data_siswa["Kelas"] == kelas]
                 list_nisn = data_kelas["NISN"].tolist()
                 list_siswa = data_kelas["Nama"].tolist()
@@ -190,7 +190,7 @@ def data_siswa():
         # 9 Halaman Data Siswa
         # load data siswa
         file_stream=stream_dropbox_file("/data_siswa.xlsx")
-        data_siswa = pd.read_excel(file_stream, converters={'NISN': str})
+        data_siswa = pd.read_excel(file_stream)
         list_kelas = data_siswa["Kelas"].unique()
         list_kelas = list(list_kelas)
         # for kelas in list_kelas:
@@ -219,7 +219,7 @@ def edit_siswa():
             kelas = request.form['kelas']
 
             file_stream=stream_dropbox_file("/data_siswa.xlsx")
-            data_siswa = pd.read_excel(file_stream, converters={'NISN': str})
+            data_siswa = pd.read_excel(file_stream)
             # nisn = 72100585
             # nama = "Agus Ahmad"  # <from input>
             # kelas = "VII"    # <from input>
@@ -420,7 +420,7 @@ def tambah_siswa():
                         # # uploaded file is located at ./tmp/data_siswa_template.xlsx to
                         new_data = pd.read_excel(file_destination)
                         file_stream=stream_dropbox_file("/data_siswa.xlsx")
-                        data_siswa = pd.read_excel(file_stream, converters={'NISN': str})
+                        data_siswa = pd.read_excel(file_stream)
                         data_siswa = pd.concat([data_siswa, new_data], axis=0)
 
                         data_siswa.to_excel("./tmp/data_siswa_bulk.xlsx", index=None)
@@ -475,7 +475,7 @@ def tambah_siswa():
 
 
                     file_stream=stream_dropbox_file("/data_siswa.xlsx")
-                    data_siswa = pd.read_excel(file_stream, converters={'NISN': str})
+                    data_siswa = pd.read_excel(file_stream)
 
                     data_siswa = data_siswa.append(
                         {   'Nama': nama,                       'Nama Panggilan': nama_panggilan,       'NISN': NISN,
@@ -892,7 +892,7 @@ def role_wali_menu():
                 # create file rekap nilai
                 # load data siswa
                 file_stream=stream_dropbox_file("/data_siswa.xlsx")
-                data_siswa = pd.read_excel(file_stream, converters={'NISN': str})
+                data_siswa = pd.read_excel(file_stream)
                 form_nilai = data_siswa[data_siswa["Kelas"] == kelas][["NISN", "Nama"]]
                 form_nilai.reset_index(inplace=True, drop=True)
                 for mpl in mapel:
@@ -936,7 +936,7 @@ def role_wali_menu():
             #     form_nilai["Rata_rata"] = form_nilai.iloc[:,1:].mean(axis=1).values
             #     form_nilai["Predikat"] = form_nilai["Rata_rata"].apply(lambda x: check_predikat(x))
 
-                form_nilai.to_excel("./nilai/Rekap_Nilai_{}.xlsx".format(kelas))
+                form_nilai.to_excel("./nilai/Rekap_Nilai_{}.xlsx".format(kelas), index=None)
                 with open("./nilai/Rekap_Nilai_{}.xlsx".format(kelas), 'rb') as f:
                     dbx.files_upload(f.read(), "/nilai/{}/{}/Rekap_Nilai_{}.xlsx".format(folder_name_1, eval_type, kelas), mode=dropbox.files.WriteMode.overwrite)
                 # create file komentar
@@ -1144,7 +1144,7 @@ def wali_rekap():
             # return str(len(checked_siswa))
             # update kelas
             file_stream=stream_dropbox_file("/data_siswa.xlsx")
-            data_siswa = pd.read_excel(file_stream, converters={'NISN': str})
+            data_siswa = pd.read_excel(file_stream)
             # checked_siswa = ["Agus Ahmad", "Ajat Wahyudin"]
             for i in range(data_siswa.shape[0]):
                 nm = data_siswa.loc[i,"Nama"]
@@ -1589,7 +1589,7 @@ def save_template_form_nilai(pelajaran, kelas, aspek_materi, eval_type):
     # 5. Unduh dan unggah form nilai
     # load data siswa
     file_stream=stream_dropbox_file("/data_siswa.xlsx")
-    data_siswa = pd.read_excel(file_stream, converters={'NISN': str})
+    data_siswa = pd.read_excel(file_stream)
     # define aspek penilaian
     aspek_lain = ["Spiritual_Predikat", "Sosial_Predikat"]
     aspek_materi = aspek_materi.split(";")
