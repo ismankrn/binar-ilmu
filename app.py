@@ -1246,6 +1246,9 @@ def wali_rekap():
                                 nilai_sel.append("{}".format(nilai_siswa_sel.iloc[0,i]))
                     else:
                         nilai_sel.append(nilai_siswa_sel.iloc[0,i])
+                nilai_sel.insert(0,0)
+                nilai_sel[2] = "{0:.2f}".format(nilai_sel[2])
+                print(nilai_sel[2])
 
                 jlh_mapel = int((len(nama_mapel)))
                 html= render_template("nilai_wali.html",nilai_sel=nilai_sel, tahun_ajaran=tahun_ajaran, cetak="0",lihat=lihat, nisn_siswa=list_nisn[siswa],
