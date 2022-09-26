@@ -888,7 +888,7 @@ def role_wali_menu():
                 for i in range(len(a.entries)):
                     file_name = a.entries[i].name
                     file_list.append(file_name.split(".")[0])
-                print(file_list)
+                # print(file_list)
                 # create file rekap nilai
                 # load data siswa
                 file_stream=stream_dropbox_file("/data_siswa.xlsx")
@@ -1179,7 +1179,7 @@ def wali_rekap():
             # return str(len(komentar_siswa_sel))
             if pd.isna(komentar_siswa_sel):
                 komentar_siswa_sel = ""
-            # nilai_sel = []
+            nilai_sel = []
             # nama_mapel = []
             # # nilai_siswa_sel.to_excel("outs.xlsx")
             # # list mapel
@@ -1187,26 +1187,28 @@ def wali_rekap():
             # for i in range(nilai_siswa_sel.shape[1]):
             #     if i > 2 and i < nilai_siswa_sel.shape[1]-6 and i%3==0 :
             #         nama_mapel.append(form_nilai.columns[i].replace("_Keterampilan",""))
-            # for i in range(nilai_siswa_sel.shape[1]):
-            #     if i > 1 and i < nilai_siswa_sel.shape[1]-1 :
-            #         if pd.isna(nilai_siswa_sel.iloc[0,i]):
-            #             nilai_sel.append("-")
-            #         else:
-            #             try:
-            #                 nilai_sel.append("{0:.2f}".format(nilai_siswa_sel.iloc[0,i]))
-            #             except:
-            #                 nilai_sel.append("{}".format(nilai_siswa_sel.iloc[0,i]))
-            #     else:
-            #         nilai_sel.append(nilai_siswa_sel.iloc[0,i])
+            for i in range(nilai_siswa_sel.shape[1]):
+                if i > 1 and i < nilai_siswa_sel.shape[1]-1 :
+                    if pd.isna(nilai_siswa_sel.iloc[0,i]):
+                        nilai_sel.append("-")
+                    else:
+                        try:
+                            nilai_sel.append("{0:.2f}".format(nilai_siswa_sel.iloc[0,i]))
+                        except:
+                            nilai_sel.append("{}".format(nilai_siswa_sel.iloc[0,i]))
+                else:
+                    nilai_sel.append(nilai_siswa_sel.iloc[0,i])
             file_stream=stream_dropbox_file("/guru_mapel.xlsx")
             guru_mapel = pd.read_excel(file_stream)
             nama_mapel = guru_mapel["Mata Pelajaran"].values.tolist()
             # return str(nama_mapel)
             jlh_mapel = int((len(nama_mapel)))
             # print(nilai_sel)
-            nilai_siswa_sel.fillna("-", inplace=True)
-            nilai_sel = nilai_siswa_sel.values.tolist()[0]
+            # nilai_siswa_sel.fillna("-", inplace=True)
+            # nilai_sel = nilai_siswa_sel.values.tolist()[0]
             nilai_sel.insert(0,0)
+            nilai_sel[2] = "{0:.2f}".format(nilai_sel[2])
+            print(nilai_sel[2])
             # print(tmp2)
             # tmp1.append(nilai_siswa_sel.values.tolist())
             # print(tmp)
