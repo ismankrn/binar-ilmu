@@ -40,20 +40,20 @@ def check_period():
     yr = today.year
     mo = today.month
 
-    # if (mo > 2) & (mo < 7):
-    #     tahun_ajaran = "{}/{}".format(yr-1, yr)
-    #     semester = 2
-    #     folder_name_1 = "{}_{}_{}".format(yr-1, yr, semester)
-    # else:
-    #     tahun_ajaran = "{}/{}".format(yr, yr+1)
-    #     semester = 1
-    #     folder_name_1 = "{}_{}_{}".format(yr, yr+1, semester)
+    if (mo > 2) & (mo < 7):
+        tahun_ajaran = "{}/{}".format(yr-1, yr)
+        semester = 2
+        folder_name_1 = "{}_{}_{}".format(yr-1, yr, semester)
+    else:
+        tahun_ajaran = "{}/{}".format(yr, yr+1)
+        semester = 1
+        folder_name_1 = "{}_{}_{}".format(yr, yr+1, semester)
 
     # temporary code
-    yr = 2021
-    tahun_ajaran = "{}/{}".format(yr, yr+1)
-    semester = 2
-    folder_name_1 = "{}_{}_{}".format(yr, yr+1, semester)
+    # yr = 2021
+    # tahun_ajaran = "{}/{}".format(yr, yr+1)
+    # semester = 2
+    # folder_name_1 = "{}_{}_{}".format(yr, yr+1, semester)
 
     return [tahun_ajaran, semester, folder_name_1]
 
