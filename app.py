@@ -1239,10 +1239,10 @@ def wali_rekap():
                 if pd.isna(komentar_siswa_sel):
                     komentar_siswa_sel = ""
                 nilai_sel = []
-                nama_mapel = []
-                for i in range(nilai_siswa_sel.shape[1]):
-                    if i > 2 and i < nilai_siswa_sel.shape[1]-6 and i%3==0 :
-                        nama_mapel.append(form_nilai.columns[i].replace("_Keterampilan",""))
+                # nama_mapel = []
+                # for i in range(nilai_siswa_sel.shape[1]):
+                #     if i > 2 and i < nilai_siswa_sel.shape[1]-6 and i%3==0 :
+                #         nama_mapel.append(form_nilai.columns[i].replace("_Keterampilan",""))
                 for i in range(nilai_siswa_sel.shape[1]):
                     if i > 1 and i < nilai_siswa_sel.shape[1]-1 :
                         if pd.isna(nilai_siswa_sel.iloc[0,i]):
@@ -1258,7 +1258,12 @@ def wali_rekap():
                 nilai_sel[2] = "{0:.2f}".format(nilai_sel[2])
                 print(nilai_sel[2])
 
+                file_stream=stream_dropbox_file("/guru_mapel.xlsx")
+                guru_mapel = pd.read_excel(file_stream)
+                nama_mapel = guru_mapel["Mata Pelajaran"].values.tolist()
+                # return str(nama_mapel)
                 jlh_mapel = int((len(nama_mapel)))
+
                 html= render_template("nilai_wali.html",nilai_sel=nilai_sel, tahun_ajaran=tahun_ajaran, cetak="0",lihat=lihat, nisn_siswa=list_nisn[siswa],
                                             pelajaran=pelajaran, kelas=kelas, semester=semester, nama_mapel=nama_mapel, komentar_siswa_sel=komentar_siswa_sel,char_count=char_count,
                                             eval_type=eval_type, nama_guru=session['nama_user'],jlh_mapel=jlh_mapel,jlh_nilai_sel=len(nilai_sel))
