@@ -57,6 +57,8 @@ def check_period():
 
     return [tahun_ajaran, semester, folder_name_1]
 
+tahun_ajaran, semester, folder_name_1 = check_period()
+
 def check_folder(eval_type):
     tahun_ajaran, semester, folder_name_1 = check_period()
     # create folder of year_semester if not exist
@@ -786,7 +788,11 @@ def role():
         for i in range(data_guru.shape[0]):
             dict_guru[data_guru.loc[i,"ID Guru"]] = data_guru.loc[i,"Nama"]
         # load data guru mapel
-        file_stream=stream_dropbox_file("/guru_mapel.xlsx")
+        try:
+            dbx.files_get_metadata("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+        except:
+            dbx.files_copy("/guru_mapel.xlsx", "/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+        file_stream=stream_dropbox_file("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
         guru_mapel = pd.read_excel(file_stream)
         guru_mapel.set_index("Mata Pelajaran", inplace=True)
         # create list mapel and kelas
@@ -810,7 +816,11 @@ def role():
                 print("Guru {} {}".format(mapel_list[i], kelas_list[i]))
 
         # load data wali kelas
-        file_stream=stream_dropbox_file("/guru_wali_kelas.xlsx")
+        try:
+            dbx.files_get_metadata("/nilai/{}/guru_wali_kelas.xlsx".format(folder_name_1))
+        except:
+            dbx.files_copy("/guru_wali_kelas.xlsx", "/nilai/{}/guru_wali_kelas.xlsx".format(folder_name_1))
+        file_stream=stream_dropbox_file("/nilai/{}/guru_wali_kelas.xlsx".format(folder_name_1))
         guru_wali_kelas = pd.read_excel(file_stream)
         # create a list of guru wali kelas
         wali_kelas_list = guru_wali_kelas["Wali Kelas"].tolist()
@@ -884,7 +894,11 @@ def role_wali_menu():
             # generate rekap nilai
             if generate:
                 # load list_mapel
-                file_stream=stream_dropbox_file("/guru_mapel.xlsx")
+                try:
+                    dbx.files_get_metadata("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+                except:
+                    dbx.files_copy("/guru_mapel.xlsx", "/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+                file_stream=stream_dropbox_file("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
                 guru_mapel = pd.read_excel(file_stream)
                 guru_mapel.set_index("Mata Pelajaran", inplace=True)
                 # create list mapel and kelas
@@ -899,7 +913,11 @@ def role_wali_menu():
                 # print(file_list)
                 # create file rekap nilai
                 # load data siswa
-                file_stream=stream_dropbox_file("/data_siswa.xlsx")
+                try:
+                    dbx.files_get_metadata("/nilai/{}/data_siswa.xlsx".format(folder_name_1))
+                except:
+                    dbx.files_copy("/data_siswa.xlsx", "/nilai/{}/data_siswa.xlsx".format(folder_name_1))
+                file_stream=stream_dropbox_file("/nilai/{}/data_siswa.xlsx".format(folder_name_1))
                 data_siswa = pd.read_excel(file_stream)
                 form_nilai = data_siswa[data_siswa["Kelas"] == kelas][["NISN", "Nama"]]
                 form_nilai.reset_index(inplace=True, drop=True)
@@ -943,7 +961,6 @@ def role_wali_menu():
             #                 form_nilai["{}_{}".format(mpl, aspek)] = form_nilai_mapel[aspek].values
             #     form_nilai["Rata_rata"] = form_nilai.iloc[:,1:].mean(axis=1).values
             #     form_nilai["Predikat"] = form_nilai["Rata_rata"].apply(lambda x: check_predikat(x))
-
                 form_nilai.to_excel("./nilai/Rekap_Nilai_{}.xlsx".format(kelas), index=None)
                 with open("./nilai/Rekap_Nilai_{}.xlsx".format(kelas), 'rb') as f:
                     dbx.files_upload(f.read(), "/nilai/{}/{}/Rekap_Nilai_{}.xlsx".format(folder_name_1, eval_type, kelas), mode=dropbox.files.WriteMode.overwrite)
@@ -1008,7 +1025,12 @@ def role_mapel_menu():
             try:
                 dbx.files_get_metadata("/nilai/{}/{}/status_nilai.xlsx".format(folder_name_1, eval_type))
             except:
-                file_stream=stream_dropbox_file("/guru_mapel.xlsx")
+                try:
+                    dbx.files_get_metadata("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+                except:
+                    dbx.files_copy("/guru_mapel.xlsx", "/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+
+                file_stream=stream_dropbox_file("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
                 status_nilai = pd.read_excel(file_stream)
                 status_nilai.iloc[:,1:] = 0
 
@@ -1151,7 +1173,12 @@ def wali_rekap():
         if update == "1":
             # return str(len(checked_siswa))
             # update kelas
-            file_stream=stream_dropbox_file("/data_siswa.xlsx")
+            try:
+                dbx.files_get_metadata("/nilai/{}/data_siswa.xlsx".format(folder_name_1))
+            except:
+                dbx.files_copy("/data_siswa.xlsx", "/nilai/{}/data_siswa.xlsx".format(folder_name_1))
+
+            file_stream=stream_dropbox_file("/nilai/{}/data_siswa.xlsx".format(folder_name_1))
             data_siswa = pd.read_excel(file_stream)
             # checked_siswa = ["Agus Ahmad", "Ajat Wahyudin"]
             for i in range(data_siswa.shape[0]):
@@ -1206,7 +1233,12 @@ def wali_rekap():
                             nilai_sel.append("{}".format(nilai_siswa_sel.iloc[0,i]))
                 else:
                     nilai_sel.append(nilai_siswa_sel.iloc[0,i])
-            file_stream=stream_dropbox_file("/guru_mapel.xlsx")
+            try:
+                dbx.files_get_metadata("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+            except:
+                dbx.files_copy("/guru_mapel.xlsx", "/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+
+            file_stream=stream_dropbox_file("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
             guru_mapel = pd.read_excel(file_stream)
             nama_mapel = guru_mapel["Mata Pelajaran"].values.tolist()
             # return str(nama_mapel)
@@ -1216,11 +1248,9 @@ def wali_rekap():
             # nilai_sel = nilai_siswa_sel.values.tolist()[0]
             nilai_sel.insert(0,0)
             nilai_sel[2] = "{0:.2f}".format(nilai_sel[2])
-            print(nilai_sel[2])
             # print(tmp2)
             # tmp1.append(nilai_siswa_sel.values.tolist())
             # print(tmp)
-            print(nama_mapel)
             html= render_template("nilai_wali.html",nilai_sel=nilai_sel, tahun_ajaran=tahun_ajaran, cetak="0",lihat=lihat, nisn_siswa=nisn_siswa,
                                         pelajaran=pelajaran, kelas=kelas, semester=semester, nama_mapel=nama_mapel, komentar_siswa_sel=komentar_siswa_sel,char_count=char_count,
                                         eval_type=eval_type, nama_guru=session['nama_user'],jlh_mapel=jlh_mapel,jlh_nilai_sel=len(nilai_sel))
@@ -1257,8 +1287,11 @@ def wali_rekap():
                 nilai_sel.insert(0,0)
                 nilai_sel[2] = "{0:.2f}".format(nilai_sel[2])
                 print(nilai_sel[2])
-
-                file_stream=stream_dropbox_file("/guru_mapel.xlsx")
+                try:
+                    dbx.files_get_metadata("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+                except:
+                    dbx.files_copy("/guru_mapel.xlsx", "/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
+                file_stream=stream_dropbox_file("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
                 guru_mapel = pd.read_excel(file_stream)
                 nama_mapel = guru_mapel["Mata Pelajaran"].values.tolist()
                 # return str(nama_mapel)
@@ -1611,14 +1644,19 @@ def unggah_form_nilai(file, eval_type, pelajaran, kelas):
 
     # copy list guru mapel
     try:
-        dbx.files_get_metadata("/nilai/{}/{}/guru_mapel.xlsx".format(folder_name_1, eval_type))
+        dbx.files_get_metadata("/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
     except:
-        dbx.files_copy("/guru_mapel.xlsx", "/nilai/{}/{}/guru_mapel.xlsx".format(folder_name_1, eval_type))
+        dbx.files_copy("/guru_mapel.xlsx", "/nilai/{}/guru_mapel.xlsx".format(folder_name_1))
 
 def save_template_form_nilai(pelajaran, kelas, aspek_materi, eval_type):
     # 5. Unduh dan unggah form nilai
     # load data siswa
-    file_stream=stream_dropbox_file("/data_siswa.xlsx")
+    try:
+        dbx.files_get_metadata("/nilai/{}/data_siswa.xlsx".format(folder_name_1))
+    except:
+        dbx.files_copy("/data_siswa.xlsx", "/nilai/{}/data_siswa.xlsx".format(folder_name_1))
+
+    file_stream=stream_dropbox_file("/nilai/{}/data_siswa.xlsx".format(folder_name_1))
     data_siswa = pd.read_excel(file_stream)
     # define aspek penilaian
     aspek_lain = ["Spiritual_Predikat", "Sosial_Predikat"]
